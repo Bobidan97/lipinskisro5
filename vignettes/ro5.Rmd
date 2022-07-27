@@ -1,0 +1,20 @@
+---
+title: "Lipinski's Rule of 5"
+author: "Alexander Ball"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lipinski's Rule of 5}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lipinskisro5)
+```

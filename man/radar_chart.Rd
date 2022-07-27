@@ -4,10 +4,10 @@
 \alias{radar_chart}
 \title{Radar Chart Summarising Compound Dataset}
 \usage{
-radar_chart(mols_filtered)
+radar_chart(filtered_dataset)
 }
 \arguments{
-\item{mols_filtered}{}
+\item{filtered_dataset}{}
 }
 \value{
 A radar plot summarising Compound Dataset
@@ -16,8 +16,8 @@ A radar plot summarising Compound Dataset
 Radar Chart Summarising Compound Dataset
 }
 \examples{
-radar_chart(mols_filtered)
+radar_chart(filtered_dataset)
 \dontrun{
-radar_chart(mols_filtered)
+radar_chart(filtered_dataset)
 }
 }

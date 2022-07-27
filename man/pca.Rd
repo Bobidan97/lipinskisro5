@@ -4,10 +4,10 @@
 \alias{pca}
 \title{Compound Dataset PCA}
 \usage{
-pca(mols_filtered)
+pca(filtered_dataset)
 }
 \arguments{
-\item{mols_filtered}{Filtered compound dataset based on Rule of 5.}
+\item{filtered_dataset}{Filtered compound dataset based on Rule of 5.}
 }
 \value{
 PCA plot of filtered compound dataset.
@@ -16,8 +16,8 @@ PCA plot of filtered compound dataset.
 Compound Dataset PCA
 }
 \examples{
-pca(mols_filtered)
+pca(filtered_dataset)
 \dontrun{
-pca(mols_filtered)
+pca(filtered_dataset)
 }
 }

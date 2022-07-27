@@ -1,17 +1,20 @@
 
-#' Lipinskis Rule of 5 Function
+#' Lipinskis Rule of 5 Filter
 #'
 #' @param compound_dataset The input compound dataset
 #'
-#' @return New filtered compound dataset based on Rule of 5.
+#' @return New filtered compound dataset based on Lipinskis Rule of 5.
 #' @export
 #'
+#' @importFrom readr read_csv
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #' @examples
-#' mol_table_construction(compound_dataset)
+#' ro5filter(compound_dataset)
 #' \dontrun{
-#' mol_table_construction(compound_dataset)
+#' ro5filter(compound_dataset)
 #' }
-mol_table_construction <- function(compound_dataset) {
+ro5filter <- function(compound_dataset) {
   #read in csv file containing compound dataset
   mols <<- read_csv(file = compound_dataset)
   #get number of molecules in dataset
@@ -19,60 +22,65 @@ mol_table_construction <- function(compound_dataset) {
   print(sprintf("%s, molecules in dataset.", num_mols))
 
   #filter dataset according to Lipinskis Rule of 5
-  mols_filtered <<- mols %>%
-    filter(MW < 500, cLogP < 5, TPSA < 140, RotatableBonds < 10, HBA < 10, HBD <5) %>%
-    select(MW, cLogP, TPSA, RotatableBonds, HBA, HBD)
+  filtered_dataset <<- mols %>%
+    filter(MW < 500, cLogP < 5, RotatableBonds < 10, HBA < 10, HBD <5) %>%
+    select(MW, cLogP, RotatableBonds, HBA, HBD)
 
   #find number of compounds not meeeting Lipinskis requirements
-  difference <- num_mols - nrow(mols_filtered)
+  difference <- num_mols - nrow(filtered_dataset)
   print(sprintf("%s, molecules removed from dataset due to not meeting Lipinski's Rules.", difference))
   #statistical summary
-  summary <- summary(mols_filtered)
+  summary <- summary(filtered_dataset)
   print(summary)
 
 }
 
 #' Compound Dataset PCA
 #'
-#' @param mols_filtered Filtered compound dataset based on Rule of 5.
+#' @param filtered_dataset Filtered compound dataset based on Rule of 5.
 #'
 #' @return PCA plot of filtered compound dataset.
 #' @export
 #'
+#' @importFrom stats prcomp
+#' @import ggbiplot
 #' @examples
-#' pca(mols_filtered)
+#' pca(filtered_dataset)
 #' \dontrun{
-#' pca(mols_filtered)
+#' pca(filtered_dataset)
 #' }
-pca <- function(mols_filtered){
-  mols.pca <<- prcomp(mols_filtered, center = TRUE, scale. = TRUE)
-  summary(mols.pca)
-  ggbiplot(mols.pca, ellipse = TRUE, labels = rownames(mols_filtered))
+pca <- function(filtered_dataset) {
+  mols.pca <<- prcomp(filtered_dataset, center = TRUE, scale. = TRUE)
+  pca_summary <- summary(mols.pca)
+  print(pca_summary)
+  ggbiplot(mols.pca, ellipse = TRUE, labels = rownames(filtered_dataset))
 
 }
 
 #' Radar Chart Summarising Compound Dataset
 #'
-#' @param mols_filtered
+#' @param filtered_dataset
 #'
 #' @return A radar plot summarising Compound Dataset
 #' @export
 #'
+#' @import fmsb
+#'
 #' @examples
-#' radar_chart(mols_filtered)
+#' radar_chart(filtered_dataset)
 #' \dontrun{
-#' radar_chart(mols_filtered)
+#' radar_chart(filtered_dataset)
 #' }
-radar_chart <- function(mols_filtered) {
+radar_chart <- function(filtered_dataset) {
   #Define the variable ranges: maximum and minimum
   max_min <<- data.frame(
-    MW = c(500, 0), cLogP = c(5, 0), TPSA = c(140, 0),
+    MW = c(500, 0), cLogP = c(5, 0),
     RotatableBonds = c(10, 0), HBA = c(10, 0), HBD = c(5, 0)
   )
   rownames(max_min) <- c("Max", "Min")
 
   #Bind the variable ranges to the data
-  df_radar <<- rbind(max_min, mols_filtered)
+  df_radar <<- rbind(max_min, filtered_dataset)
 
   radarchart(data = df_radar)
 
