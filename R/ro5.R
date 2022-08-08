@@ -1,20 +1,21 @@
 
-#' Lipinskis Rule of 5 Filter
+#' Lipinskis Rule of 5
 #'
 #' @param compound_dataset The input compound dataset
 #'
-#' @return New filtered compound dataset based on Lipinskis Rule of 5.
+#' @return New filtered compound dataset based on Lipinskis Rule of 5 plus PCA
+#' and Radar Chart
 #' @export
 #'
 #' @importFrom readr read_csv
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
+#' @importFrom stats prcomp
+#' @import fmsb
+#' @import ggbiplot
 #' @examples
-#' ro5filter(compound_dataset)
-#' \dontrun{
-#' ro5filter(compound_dataset)
-#' }
-ro5filter <- function(compound_dataset) {
+#'
+lipro5 <- function(compound_dataset) {
   #read in csv file containing compound dataset
   mols <<- read_csv(file = compound_dataset)
   #get number of molecules in dataset
@@ -33,45 +34,12 @@ ro5filter <- function(compound_dataset) {
   summary <- summary(filtered_dataset)
   print(summary)
 
-}
 
-#' Compound Dataset PCA
-#'
-#' @param filtered_dataset Filtered compound dataset based on Rule of 5.
-#'
-#' @return PCA plot of filtered compound dataset.
-#' @export
-#'
-#' @importFrom stats prcomp
-#' @import ggbiplot
-#' @examples
-#' pca(filtered_dataset)
-#' \dontrun{
-#' pca(filtered_dataset)
-#' }
-pca <- function(filtered_dataset) {
   mols.pca <<- prcomp(filtered_dataset, center = TRUE, scale. = TRUE)
   pca_summary <- summary(mols.pca)
   print(pca_summary)
   ggbiplot(mols.pca, ellipse = TRUE, labels = rownames(filtered_dataset))
 
-}
-
-#' Radar Chart Summarising Compound Dataset
-#'
-#' @param filtered_dataset
-#'
-#' @return A radar plot summarising Compound Dataset
-#' @export
-#'
-#' @import fmsb
-#'
-#' @examples
-#' radar_chart(filtered_dataset)
-#' \dontrun{
-#' radar_chart(filtered_dataset)
-#' }
-radar_chart <- function(filtered_dataset) {
   #Define the variable ranges: maximum and minimum
   max_min <<- data.frame(
     MW = c(500, 0), cLogP = c(5, 0),
